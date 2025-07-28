@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CyberPet Ultra</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
+    <link href="styles_responsive.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+</head>
+<body>
+    
+    <!-- Ventana de Juegos -->
+    <div class="games-window" id="gamesWindow">
+        <div class="games-window-header">
+            <h3 class="games-window-title">Minijuegos CyberPet</h3>
+            <button class="close-btn" onclick="closeGamesWindow()">✖</button>
+        </div>
+        <div class="games-grid">
+            <button class="game-btn" onclick="startGame('guess')">🔢 Adivina el Número</button>
+            <button class="game-btn" onclick="startGame('rps')">✊ Piedra, Papel o Tijera</button>
+        </div>
+        <div class="game-container" id="gameContainer"></div>
+    </div>
+
+    <!-- Botón de búsqueda -->
+    <button id="searchBtn" title="Buscador CyberPet">🔍</button>
+
+    <!-- Botón de personalización -->
+    <button id="customBtn" title="Personalizar">🎨</button>
+
+    <!-- Panel de personalización -->
+    <div class="custom-panel" id="customPanel">
+        <button class="close-btn" id="closePanel">✖</button>
+        <h4>Personalización de Colores</h4>
+        
+        <div class="custom-section">
+            <h5>Color Principal</h5>
+            <div class="color-options">
+                <div class="color-option" style="background: #0ff;" onclick="changeMainColor('#0ff')"></div>
+                <div class="color-option" style="background: #f0f;" onclick="changeMainColor('#f0f')"></div>
+                <div class="color-option" style="background: #0f0;" onclick="changeMainColor('#0f0')"></div>
+                <div class="color-option" style="background: #ff0;" onclick="changeMainColor('#ff0')"></div>
+                <div class="color-option" style="background: #f00;" onclick="changeMainColor('#f00')"></div>
+                <div class="color-option" style="background: #ff6600;" onclick="changeMainColor('#ff6600')"></div>
+                <button onclick="resetMainColor()" class="reset-btn" title="Restablecer">↺</button>
+            </div>
+        </div>
+        
+        <div class="custom-section">
+            <h5>Color de Ojos</h5>
+            <div class="color-options">
+                <div class="color-option" style="background: #0ff;" onclick="changeEyesColor('#0ff')"></div>
+                <div class="color-option" style="background: #f0f;" onclick="changeEyesColor('#f0f')"></div>
+                <div class="color-option" style="background: #0f0;" onclick="changeEyesColor('#0f0')"></div>
+                <div class="color-option" style="background: #ff0;" onclick="changeEyesColor('#ff0')"></div>
+                <div class="color-option" style="background: #f00;" onclick="changeEyesColor('#f00')"></div>
+                <div class="color-option" style="background: #00f;" onclick="changeEyesColor('#00f')"></div>
+                <button onclick="resetEyesColor()" class="reset-btn" title="Restablecer">↺</button>
+            </div>
+        </div>
+        
+        <div class="custom-section">
+            <h5>Color de Boca</h5>
+            <div class="color-options">
+                <div class="color-option" style="background: #ff0000;" onclick="changeMouthColor('#ff0000')"></div>
+                <div class="color-option" style="background: #ff6600;" onclick="changeMouthColor('#ff6600')"></div>
+                <div class="color-option" style="background: #ff00ff;" onclick="changeMouthColor('#ff00ff')"></div>
+                <div class="color-option" style="background: #00ff00;" onclick="changeMouthColor('#00ff00')"></div>
+                <div class="color-option" style="background: #9900ff;" onclick="changeMouthColor('#9900ff')"></div>
+                <div class="color-option" style="background: #ffff00;" onclick="changeMouthColor('#ffff00')"></div>
+                <button onclick="resetMouthColor()" class="reset-btn" title="Restablecer">↺</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Panel de búsqueda -->
+    <div class="search-panel" id="searchPanel">
+        <div class="search-header">
+            <h3 class="search-title">Buscador CyberPet</h3>
+            <button class="search-close" id="searchClose" title="Cerrar">✖</button>
+        </div>
+        <div class="chat-container" id="chatContainer">
+            <div class="bot-message">
+                ¡Hola! Soy CyberPet, tu ayudante virtual. Puedes preguntarme sobre cualquier cosa y te buscaré información segura en internet. ¿En qué puedo ayudarte hoy?
+            </div>
+        </div>
+        <div class="input-container">
+            <input type="text" id="userInput" placeholder="Escribe tu pregunta...">
+            <button onclick="sendQuestion()" class="send-btn" title="Enviar pregunta">✈️</button>
+        </div>
+        <div class="voice-controls">
+            <button id="voiceCommandBtn" onclick="startVoiceCommand()" title="Comando de voz">🎤</button>
+            <button id="playBtn" class="voice-btn" title="Reproducir" disabled>▶️</button>
+            <button id="pauseBtn" class="voice-btn" title="Pausar" disabled>⏸️</button>
+            <button id="stopBtn" class="voice-btn" title="Detener" disabled>⏹️</button>
+        </div>
+       
+    </div>
+
+    <!-- Fondo interactivo -->
+    <div id="particles-js"></div>
+
+    <!-- Contenedor principal -->
+    <div class="cyber-container">
+        <!-- Panel de estadísticas -->
+        <div class="stats-panel">
+            <div class="stat">
+                <div class="stat">
+                    
+                    <div class="cyber-clock">
+                        <div class="time-display" id="current-time">23:59:42</div>
+                        <div class="date-display" id="current-date">VIERNES 28 JUN, 2024</div>
+                        <div class="glow-effect"></div>
+                    </div>
+                </div>
+                <span class="stat-label">Nivel de energía:</span>
+                <span id="energy-level">100%</span>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="energy-bar"></div>
+                </div>
+            </div>
+            <div class="stat">
+                <span class="stat-label">Estado de ánimo:</span>
+                <span id="mood-status">Feliz</span>
+            </div>
+            <div class="stat">
+                <span class="stat-label">Comida consumida:</span>
+                <span id="food-count">0</span>
+            </div>
+            
+            <div class="cyber-radio">
+                <span id="station-name">🔴 Radio CyberPet</span>
+                <div class="radio-display">
+                    <div class="radio-controls">
+                        <button id="prev-btn" class="cyber-btn">⏮</button>
+                        <button id="play-btn" class="cyber-btn">▶</button>
+                        <button id="next-btn" class="cyber-btn">⏭</button>
+                    </div>
+                </div>
+                <select id="station-select" class="cyber-select">
+                    <option value="https://stream.zeno.fm/1m42oahahycvv">Estación Hacker</option>
+                    <option value="https://stream.zeno.fm/4e68b4cw24zuv">Estación Retro</option>
+                </select>
+            </div>
+            
+            <audio id="radio-player" hidden></audio>
+        </div>
+
+        <!-- Cara del robot -->
+        <div class="bmo-screen">
+            <div class="crt-effect"></div>
+            <div class="face">
+                <div class="eyes-container">
+                    <div class="eye" id="leftEye">
+                        <div class="pupil" id="leftPupil"></div>
+                    </div>
+                    <div class="eye" id="rightEye">
+                        <div class="pupil" id="rightPupil"></div>
+                    </div>
+                </div>
+                <div class="mouth" id="mouth"></div>
+            </div>
+        </div>
+
+        <!-- Controles -->
+        <div class="controls">
+            <button onclick="changeExpression('happy')">Feliz</button>
+            <button onclick="changeExpression('angry')">Enojado</button>
+            <button onclick="changeExpression('sleep')">Dormir</button>
+            <button onclick="changeExpression('surprised')">Sorprendido</button>
+            <button onclick="showFoodWindow()">Alimentar</button>
+            <button onclick="takeSelfie()">Selfie</button>
+            <button onclick="showGamesWindow()">Jugar</button>
+            
+        </div>
+    </div>
+
+    <!-- Ventana de comida -->
+    <div class="food-window" id="foodWindow">
+        <div class="food-window-header">
+            <h3 class="food-window-title">Selecciona comida</h3>
+            <button class="close-btn" onclick="closeFoodWindow()">✖</button>
+        </div>
+        <div class="food-grid" id="foodGrid">
+            <!-- Los emojis se agregarán con JavaScript -->
+        </div>
+    </div>
+
+    <!-- Comida en cursor -->
+    <div class="food-cursor" id="foodCursor"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
